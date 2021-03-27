@@ -1,14 +1,13 @@
 'use strict';
-// key: タスクの文字列 value: 完了しているかどうかの真偽値
-let tasks = new Map();
-
+// { name: タスクの文字列, state: 完了しているかどうかの真偽値 }
+let tasks = [];
 const fs = require('fs');
 const fileName = './tasks.json';
 
 // 同期的にファイルから復元
 try {
   const data = fs.readFileSync(fileName, 'utf8');
-  tasks = new Map(JSON.parse(data));
+  tasks = JSON.parse(data);
 } catch (ignore) {
   console.log(fileName + 'から復元できませんでした');
 }
@@ -17,7 +16,7 @@ try {
  * タスクをファイルに保存する
  */
 function saveTasks() {
-  fs.writeFileSync(fileName, JSON.stringify(Array.from(tasks)), 'utf8');
+  fs.writeFileSync(fileName, JSON.stringify(tasks), 'utf8');
 }
 
 /**
@@ -25,7 +24,7 @@ function saveTasks() {
  * @param {string} task
  */
 function add(task) {
-  tasks.set(task, false);
+  tasks.push({ name: task, state: false });
   saveTasks();
 }
 
@@ -35,7 +34,7 @@ function add(task) {
  * @return {boolean} 完了したかどうか
  */
 function isDone(taskAndIsDonePair) {
-  return taskAndIsDonePair[1];
+  return taskAndIsDonePair.state;
 }
 
 /**
@@ -48,13 +47,11 @@ function isNotDone(taskAndIsDonePair) {
 }
 
 /**
- * TODOの一覧の配列を取得する
+ * TODO一覧の配列を取得する
  * @return {array}
  */
 function list() {
-  return Array.from(tasks)
-    .filter(isNotDone)
-    .map(t => t[0]);
+  return tasks.filter(isNotDone).map(t => t.name);
 }
 
 /**
@@ -62,8 +59,9 @@ function list() {
  * @param {string} task
  */
 function done(task) {
-  if (tasks.has(task)) {
-    tasks.set(task, true);
+  const indexFound = tasks.findIndex(t => t.name === task);
+  if (indexFound !== -1) {
+    tasks[indexFound].state = true;
     saveTasks();
   }
 }
@@ -73,9 +71,7 @@ function done(task) {
  * @return {array}
  */
 function donelist() {
-  return Array.from(tasks)
-    .filter(isDone)
-    .map(t => t[0]);
+  return tasks.filter(isDone).map(t => t.name);
 }
 
 /**
@@ -83,8 +79,11 @@ function donelist() {
  * @param {string} task
  */
 function del(task) {
-  tasks.delete(task);
-  saveTasks();
+  const indexFound = tasks.findIndex(t => t.name === task);
+  if (indexFound !== -1) {
+    tasks.splice(indexFound, 1);
+    saveTasks();
+  }
 }
 
 module.exports = {
