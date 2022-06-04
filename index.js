@@ -29,21 +29,21 @@ function add(task) {
 }
 
 /**
- * タスクと完了したかどうかが含まれる配列を受け取り、完了したかを返す
- * @param {array} taskAndIsDonePair
+ * タスクと完了したかどうかが含まれるオブジェクトを受け取り、完了したかを返す
+ * @param {object} task
  * @return {boolean} 完了したかどうか
  */
-function isDone(taskAndIsDonePair) {
-  return taskAndIsDonePair.state;
+function isDone(task) {
+  return task.state;
 }
 
 /**
- * タスクと完了したかどうかが含まれる配列を受け取り、完了していないかを返す
- * @param {array} taskAndIsDonePair
+ * タスクと完了したかどうかが含まれるオブジェクトを受け取り、完了していないかを返す
+ * @param {object} task
  * @return {boolean} 完了していないかどうか
  */
-function isNotDone(taskAndIsDonePair) {
-  return !isDone(taskAndIsDonePair);
+function isNotDone(task) {
+  return !isDone(task);
 }
 
 /**
