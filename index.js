@@ -1,5 +1,5 @@
 'use strict';
-// { name: タスクの文字列, state: 完了しているかどうかの真偽値 }
+// { name: タスクの名前, state: 完了しているかどうかの真偽値 }
 let tasks = [];
 const fs = require('fs');
 const fileName = './tasks.json';
@@ -8,8 +8,8 @@ const fileName = './tasks.json';
 try {
   const data = fs.readFileSync(fileName, 'utf8');
   tasks = JSON.parse(data);
-} catch (ignore) {
-  console.log(fileName + 'から復元できませんでした');
+} catch (err) {
+  console.log(`${fileName}から復元できませんでした`);
 }
 
 /**
@@ -21,10 +21,10 @@ function saveTasks() {
 
 /**
  * タスクを追加する
- * @param {string} task
+ * @param {string} taskName
  */
-function add(task) {
-  tasks.push({ name: task, state: false });
+function add(taskName) {
+  tasks.push({ name: taskName, state: false });
   saveTasks();
 }
 
@@ -51,15 +51,17 @@ function isNotDone(task) {
  * @return {array}
  */
 function list() {
-  return tasks.filter(isNotDone).map(t => t.name);
+  return tasks
+    .filter(isNotDone)
+    .map(task => task.name);
 }
 
 /**
  * タスクを完了状態にする
- * @param {string} task
+ * @param {string} taskName
  */
-function done(task) {
-  const indexFound = tasks.findIndex(t => t.name === task);
+function done(taskName) {
+  const indexFound = tasks.findIndex(task => task.name === taskName);
   if (indexFound !== -1) {
     tasks[indexFound].state = true;
     saveTasks();
@@ -71,15 +73,17 @@ function done(task) {
  * @return {array}
  */
 function donelist() {
-  return tasks.filter(isDone).map(t => t.name);
+  return tasks
+  .filter(isDone)
+  .map(task => task.name);
 }
 
 /**
  * 項目を削除する
- * @param {string} task
+ * @param {string} taskName
  */
-function del(task) {
-  const indexFound = tasks.findIndex(t => t.name === task);
+function del(taskName) {
+  const indexFound = tasks.findIndex(task => task.name === taskName);
   if (indexFound !== -1) {
     tasks.splice(indexFound, 1);
     saveTasks();
