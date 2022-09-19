@@ -1,5 +1,5 @@
 'use strict';
-// { name: タスクの名前, state: 完了しているかどうかの真偽値 }
+// { name: タスクの名前, isDone: 完了しているかどうかの真偽値 }
 let tasks = [];
 const fs = require('fs');
 const fileName = './tasks.json';
@@ -24,7 +24,7 @@ function saveTasks() {
  * @param {string} taskName
  */
 function add(taskName) {
-  tasks.push({ name: taskName, state: false });
+  tasks.push({ name: taskName, isDone: false });
   saveTasks();
 }
 
@@ -34,7 +34,7 @@ function add(taskName) {
  * @return {boolean} 完了したかどうか
  */
 function isDone(task) {
-  return task.state;
+  return task.isDone;
 }
 
 /**
@@ -63,7 +63,7 @@ function list() {
 function done(taskName) {
   const indexFound = tasks.findIndex(task => task.name === taskName);
   if (indexFound !== -1) {
-    tasks[indexFound].state = true;
+    tasks[indexFound].isDone = true;
     saveTasks();
   }
 }
@@ -74,8 +74,8 @@ function done(taskName) {
  */
 function donelist() {
   return tasks
-  .filter(isDone)
-  .map(task => task.name);
+    .filter(isDone)
+    .map(task => task.name);
 }
 
 /**
