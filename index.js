@@ -1,7 +1,7 @@
 'use strict';
 // { name: タスクの名前, isDone: 完了しているかどうかの真偽値 }
 let tasks = [];
-const fs = require('fs');
+const fs = require('node:fs');
 const fileName = './tasks.json';
 
 // 同期的にファイルから復元
